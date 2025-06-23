@@ -25,20 +25,17 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Kredensial yang diberikan salah.'],
-            ]);
+            return response()->json([
+                'message' => 'Email atau password salah.'
+            ], 401); // Ubah dari 422 ke 401 Unauthorized
         }
 
-        // Revoke all existing tokens for the user (optional, for single active token)
-        // $user->tokens()->delete();
-
-        // Create a new token
+        $user->tokens()->delete();
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'message' => 'Login berhasil',
-            'user' => $user, // Consider using a UserResource here for consistent output
+            'user' => $user,
             'access_token' => $token,
             'token_type' => 'Bearer',
         ]);

@@ -7,6 +7,7 @@ use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class TransactionController extends Controller
 {
@@ -28,23 +29,38 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'type' => ['required', Rule::in(['income', 'expense'])],
-            'category' => 'nullable|string|max:255',
-            'date' => 'required|date',
-            'description' => 'nullable|string',
-            'ticket_number' => 'nullable|string|max:255',
-            'user_id' => 'required|exists:users,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'amount' => 'required|numeric',
+                'type' => ['required', Rule::in(['income', 'expense'])],
+                'category' => 'nullable|string|max:255',
+                'date' => 'required|date',
+                'description' => 'nullable|string',
+                'ticket_number' => 'nullable|string|max:255',
+                'user_id' => 'required|exists:users,id',
+            ]);
 
-        $transaction = Transaction::create($request->all());
+            $transaction = Transaction::create($validated);
 
-        return response()->json([
-            'message' => 'Transaction created successfully',
-            'data' => $transaction
-        ], 201);
+            return response()->json([
+                'message' => 'Transaction created successfully',
+                'data' => $transaction
+            ], 201);
+
+        } catch (ValidationException $e) {
+            // Tangkap validasi dan balikan errornya
+            return response()->json([
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            // Tangkap error umum lainnya
+            return response()->json([
+                'message' => 'Terjadi kesalahan internal.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
