@@ -14,8 +14,8 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Add User',
-        href: '',
+        title: 'User Management',
+        href: '/users',
         icon: UserPlus,
     },
 ];

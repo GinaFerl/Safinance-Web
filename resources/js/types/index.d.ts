@@ -35,6 +35,7 @@ export interface User {
     id: number;
     username: string;
     email: string;
+    role: 'superadmin' | 'admin' | 'board';
     avatar?: string;
     email_verified_at: string | null;
     created_at: string;
