@@ -14,10 +14,9 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all(); // Mengambil semua data user dari database
-        // dd(UserResource::collection($users)->toArray(request()));
+        $users = User::all();
 
-        return Inertia::render('users', [
+        return Inertia::render('users', [ 
             'users' => UserResource::collection($users),
             'success_message' => session('success'),
         ]);
@@ -44,4 +43,28 @@ class UserController extends Controller
         // dan flash message 'success' akan tersedia di props.
         return redirect()->route('users.index')->with('success', 'User has been added successfully!');
     }
+
+    public function update(Request $request, User $user)
+    {
+        $request->validate([
+            'username' => 'required|string|max:255',
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'role' => ['required', Rule::in(['superadmin', 'admin', 'board'])],
+        ]);
+
+        $user->update([
+            'username' => $request->username,
+            'email' => $request->email,
+            'role' => $request->role,
+        ]);
+
+        return redirect()->route('users.index')->with('success', 'User updated successfully.');
+    }
+
+    public function destroy(User $user)
+    {
+        $user->delete();
+        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+    }
+
 }

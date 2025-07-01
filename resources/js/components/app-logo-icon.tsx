@@ -4,7 +4,7 @@ export default function AppLogoIcon(props: ImgHTMLAttributes<HTMLImageElement>) 
     return (
         <img
             {...props}
-            src="src/safinance-white.png"
+            src="./src/safinance-white.png"
             alt="Safinance Logo"
         />
     );
