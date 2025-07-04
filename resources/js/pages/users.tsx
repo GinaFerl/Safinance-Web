@@ -180,11 +180,11 @@ export default function Index() {
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50 dark:bg-[#222831]">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Username</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created At</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Username</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Email</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Role</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Created At</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200 dark:bg-[#31363F]">
