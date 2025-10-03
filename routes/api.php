@@ -43,6 +43,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Resource routes for transaction
     Route::apiResource('transactions', TransactionController::class); // Perhatikan 'transactions' (plural) untuk konsistensi
 
+    Route::get('reports/transactions/{year}/{month}', [TransactionController::class, 'getMonthlyReport']); 
+    
     //Resource routes for MonthlyReport
     Route::apiResource('monthly-reports', MonthlyReportController::class);
 });

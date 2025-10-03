@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -126,5 +127,38 @@ class TransactionController extends Controller
         return response()->json([
             'message' => 'Transaction deleted successfully'
         ], 200);
+    }
+
+    public function getMonthlyReport(Request $request, int $year, int $month)
+    {
+        // 1. Validasi Input Dasar
+        if ($month < 1 || $month > 12) {
+             return response()->json(['message' => 'Bulan tidak valid.'], 422);
+        }
+
+        try {
+            // 2. Tentukan Rentang Tanggal
+            $startDate = Carbon::createFromDate($year, $month, 1)->startOfDay();
+            $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth()->endOfDay();
+
+            // 3. Ambil Data Transaksi dari user yang login
+            $userId = $request->user()->id; 
+
+            $transactions = Transaction::with('user')
+                ->where('user_id', $userId)
+                ->whereBetween('date', [$startDate, $endDate])
+                ->orderBy('date', 'asc')
+                ->get();
+
+            // 4. Kembalikan Data
+            return response()->json([
+                'message' => "Laporan transaksi harian untuk $month/$year berhasil diambil.",
+                'data' => TransactionResource::collection($transactions)
+            ], 200);
+
+        } catch (\Exception $e) {
+            // Tangkap error dan kembalikan 500
+            return response()->json(['message' => 'Terjadi kesalahan server saat mengambil laporan.'], 500);
+        }
     }
 }
